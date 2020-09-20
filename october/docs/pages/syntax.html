@@ -46,6 +46,7 @@
 	"soundPlay":&lt;Filename&gt; (optional, Play a sound),<br/>
 	"color":&lt;rgba() or color name&gt; (optional, Text color),<br/>
 	"text":&lt;String&gt; (Text to show to the player),<br/>
+	"localization"&lt;Localization object Array&gt; (Optional, localized text),<br/>
 	"key":&lt;Variable Name&gt; (optional, userStorage key),<br/>
 	"value":&lt;String&gt; (optional, Assign a value to "key"),<br/>
 	"add":&lt;String&gt; (optional, Add a value to "key"),<br/>
@@ -101,6 +102,8 @@
 	"type":&lt;"redirect" or "exit"&gt; (Choice type, exit is only available on desktop),<br/>
 	"condition":&lt;"Condition Object"&gt; (Optional,Condition required to show this choice),<br/>
 	"text":&lt;String&gt; (Text to show to the player),<br/>
+	"localization"&lt;Localization object Array&gt; (Optional, localized text),<br/>
+	"language"&lt;String&gt; (Optional, changes the current language of the game),<br/>
 	"key":&lt;Variable Name&gt; (optional, userStorage key),<br/>
 	"value":&lt;String&gt; (optional, Assign a value to "key"),<br/>
 	"add":&lt;String&gt; (optional, Add a value to "key"),<br/>
@@ -329,6 +332,31 @@
 	"targetBranching":&lt;Branching Object&gt; (optional, similar to an and if statement),<br/>
 	"default":&lt;Script or Variable Identifier&gt;(optional, Script to execute if the condition is false, similar to an else statement),<br/>
 	"defaultBranching":&lt;Branching Object&gt; (optional, similar to an else if statement)<br/>
+}
+</pre>	
+					  </div>
+					</div>
+				  </div>
+				  <div class="card">
+					<div class="card-header" id="headingLocalization">
+					  <h2 class="mb-0">
+						<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseLocalization">
+						  Localization
+						</button>
+					  </h2>
+					</div>
+					<div id="collapseLocalization" class="collapse" aria-labelledby="headingLocalization" data-parent="#featuresAccordion">
+					  <div class="card-body">
+						<h2>Description:</h2>
+						<br/>
+						<p>
+							Allows to localizate text of the game so it can be played in different languages
+						</p>
+						<h2>Syntax:</h2>
+<pre>
+{<br/>
+	"language":&lt;String&gt;(Language of the text),<br/>
+	"text":&lt;Script&gt;(localized text),<br/>
 }
 </pre>	
 					  </div>
