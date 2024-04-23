@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            html {
+                font-family: monospace;
+            }
+            table{
+                border-spacing: 0px;
+            }
+            th, td{
+                border-bottom: 2px solid rgb(140 140 140);
+            }
+            span {
+                margin-right: 1em;
+            }
+            .centered{
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 id="title">ZA 12</h1>
+        <h3 id="1">1. Basic Description</h3>
+        <p>
+            ZA 12 is a 12 bit toy ISA and verilog CPU soft core I designed for fun.
+            <br>
+            It has 8 general, 1 compare (0x8) and 1 return value (0x9) 12 bit registers and a program counter.
+            <br>
+            It contains two ROM chips on package, one for user code and one for virtual instructions and a RAM chip.
+            <br>
+            All of them contain 4096 32 bit big-endian addresses.
+            <br>
+            At this point, the roadmap includes implementing I/O, byte size operations, interrupts, a FPU and full duplex UART.
+        </p>
+        <h3 id="2">2. Instruction Set</h3>
+        <h4 id="2_1">2.1. Instruction Decoding</h4>
+        <p>
+            An instruction is 32 bit long and it is decoded into the following parts:
+        </p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Section name</th>
+                    <th>Bits</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span>Opcode</span>
+                    </td>
+                    <td class="centered">
+                        4
+                    </td>
+                    <td><span>
+                        The opcode of the instruction
+                    </span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>Flags</span>
+                    </td>
+                    <td class="centered">
+                        4
+                    </td>
+                    <td>
+                        <ul>
+                            <li>
+                                Bit 0 indicates if the first operand is a register (1) or immediate (0)
+                            </li>
+                            <li>
+                                Bit 1 indicates if the instruction is part of the extended set (1) or basic set (0)
+                            </li>
+                            <li>
+                                Bit 2 and 3 are reserved for future use at the moment
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>First operand</span>
+                    </td>
+                    <td class="centered">
+                        12
+                    </td>
+                    <td><span>
+                        It can be a register or an immediate value
+                    </span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>Second operand</span>
+                    </td>
+                    <td class="centered">
+                        12
+                    </td>
+                    <td><span>
+                        It is always a register, except for the store/storei instructions where it is a RAM address
+                    </span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            The instruction set is divided into:
+            <br>
+            <ul>
+                <li>Basic instructions (word size ALU register operations and jumps)</li> 
+                <li>Extended instructions (load/store, future versions of the ISA will incorporate other instructions such as byte size ALU operations and I/O)</li>
+            </ul>
+        </p>
+        <h4 id="2_2">2.2. Legal Opcode + Flag combinations</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Opcode</th>
+                    <th>Asm name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="centered">
+                        0x00
+                    </td>
+                    <td>
+                        nop
+                    </td>
+                    <td>
+                        <span>It does nothing</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x01
+                    </td>
+                    <td>
+                        seti
+                    </td>
+                    <td>
+                        <span>Assigns the immediate value of the first operand to the register of the second operand</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x11
+                    </td>
+                    <td>
+                        set
+                    </td>
+                    <td>
+                        <span>Assigns the register value of the first operand to the register of the second operand</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x02
+                    </td>
+                    <td>
+                        addi
+                    </td>
+                    <td>
+                        <span>Adds the immediate value of the first operand to the value of the register of the second operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x12
+                    </td>
+                    <td>
+                        add
+                    </td>
+                    <td>
+                        <span>Adds the register value of the first operand to the value of the register of the second operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x03
+                    </td>
+                    <td>
+                        muli
+                    </td>
+                    <td>
+                        <span>Multiply the immediate value of the first operand to the value of the register of the second operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x13
+                    </td>
+                    <td>
+                        mul
+                    </td>
+                    <td>
+                        <span>Multiply the register value of the first operand to the value of the register of the second operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x04
+                    </td>
+                    <td>
+                        subi
+                    </td>
+                    <td>
+                        <span>Substracts the immediate value of the first operand to the value of the register of the second operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x14
+                    </td>
+                    <td>
+                        sub
+                    </td>
+                    <td>
+                        <span>Substracts the register value of the first operand to the value of the register of the second operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x05
+                    </td>
+                    <td>
+                        sli
+                    </td>
+                    <td>
+                        <span>Performs logical left shift to the value of the register of the second operand by the immediate value of the first operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x15
+                    </td>
+                    <td>
+                        sl
+                    </td>
+                    <td>
+                        <span>Performs logical left shift to the value of the register of the second operand by the register value of the first operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x06
+                    </td>
+                    <td>
+                        sri
+                    </td>
+                    <td>
+                        <span>Performs logical right shift to the value of the register of the second operand by the immediate value of the first operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x16
+                    </td>
+                    <td>
+                        sr
+                    </td>
+                    <td>
+                        <span>Performs logical right shift to the value of the register of the second operand by the register value of the first operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x07
+                    </td>
+                    <td>
+                        andi
+                    </td>
+                    <td>
+                        <span>Performs bitwise and to the value of the register of the second operand using the immediate value of the first operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x17
+                    </td>
+                    <td>
+                        and
+                    </td>
+                    <td>
+                        <span>Performs bitwise and to the value of the register of the second operand using the register value of the first operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x08
+                    </td>
+                    <td>
+                        ori
+                    </td>
+                    <td>
+                        <span>Performs bitwise or to the value of the register of the second operand using the immediate value of the first operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x18
+                    </td>
+                    <td>
+                        or
+                    </td>
+                    <td>
+                        <span>Performs bitwise or to the value of the register of the second operand using the register value of the first operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x09
+                    </td>
+                    <td>
+                        not
+                    </td>
+                    <td>
+                        <span>Performs bitwise negation to the value of the register of the second operand, stores the result into the second operand register</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x0A
+                    </td>
+                    <td>
+                        mswti
+                    </td>
+                    <td>
+                        <span>Please, refer to the <a href="#2_3">virtual instructions</a> section</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x1A
+                    </td>
+                    <td>
+                        mswt
+                    </td>
+                    <td>
+                        <span>Please, refer to the <a href="#2_3">virtual instructions</a> section</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x0C
+                    </td>
+                    <td>
+                        jmpi
+                    </td>
+                    <td><span>
+                        Changes the program counter to the immediate value of the first operand.
+                    </span></td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x1C
+                    </td>
+                    <td>
+                        jmp
+                    </td>
+                    <td><span>
+                        Changes the program counter to the register value of the first operand.
+                    </span></td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x0D
+                    </td>
+                    <td>
+                        zjmpi
+                    </td>
+                    <td><span>
+                        Changes the program counter to the immediate value of the first operand, if the register value of the second operand is zero.
+                    </span></td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x1D
+                    </td>
+                    <td>
+                        zjmp
+                    </td>
+                    <td><span>
+                        Changes the program counter to the register value of the first operand, if the register value of the second operand is zero.
+                    </span></td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x0E
+                    </td>
+                    <td>
+                        ljmpi
+                    </td>
+                    <td><span>
+                        Changes the program counter to the immediate value of the first operand, if the register value of the second operand is less than the value of the compare register.
+                    </span></td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x1E
+                    </td>
+                    <td>
+                        ljmp
+                    </td>
+                    <td><span>
+                        Changes the program counter to the register value of the first operand, if the register value of the second operand is less than the value of the compare register.
+                    </span></td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x0F
+                    </td>
+                    <td>
+                        gjmpi
+                    </td>
+                    <td><span>
+                        Changes the program counter to the immediate value of the first operand, if the register value of the second operand is greater than the value of the compare register.
+                    </span></td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x1F
+                    </td>
+                    <td>
+                        gjmp
+                    </td>
+                    <td><span>
+                        Changes the program counter to the register value of the first operand, if the register value of the second operand is greater than the value of the compare register.
+                    </span></td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x20
+                    </td>
+                    <td>
+                        loadi
+                    </td>
+                    <td><span>
+                        Reads the immediate RAM address stored on the first operand, stores the value into the second operand register.
+                        <br>
+                        NOTE: RAM operations have a 3 cycle latency, you can use a nop instruction as padding if necessary.
+                    </span></td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x30
+                    </td>
+                    <td>
+                        load
+                    </td>
+                    <td><span>
+                        Reads the register RAM address stored on the first operand, stores the value into the second operand register.
+                        <br>
+                        NOTE: RAM operations have a 3 cycle latency, you can use a nop instruction as padding if necessary.
+                    </span></td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x21
+                    </td>
+                    <td>
+                        storei
+                    </td>
+                    <td><span>
+                        Writes to the immediate RAM address stored on the second operand, stores the immediate value of the first operand.
+                        <br>
+                        NOTE: RAM operations have a 3 cycle latency, you can use a nop instruction as padding if necessary.
+                    </span></td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x31
+                    </td>
+                    <td>
+                        store
+                    </td>
+                    <td><span>
+                        Writes to the immediate RAM address stored on the second operand, stores the register value of the first operand.
+                        <br>
+                        NOTE: RAM operations have a 3 cycle latency, you can use a nop instruction as padding if necessary.
+                    </span></td>
+                </tr>
+            </tbody>
+        </table>
+        <h4 id="2_3">2.3. Virtual Instructions</h4>
+        <p>
+            The ZA 12 package contains a ROM chip with software implemented functions.
+            <br>
+            To call them the developers must populate the input registers indicated on the particular function definition and the return value register.
+            <br>
+            Once that is done, the virtual instruction can be invoked using either the mswt or mswti instruction, 
+            <br>
+            the difference being if you jump to the immediate or register value function indicated on the first operand.
+            <br>
+            Once the virtual function has ended, execution returns to the address indicated on the return value register.
+            <h5 id="2_3_1">2.3.1. Virtual Instructions Table:</h5>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Index</th>
+                        <th>Asm name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="centered">0x0</td>
+                        <td><span>hlt</span></td>
+                        <td><span>
+                            This instruction is only enabled on debug prototypes and it is used to stop execution.
+                            <br>
+                            Execution never returns to user code after calling it.
+                        </span></td>
+                    </tr>
+                    <tr>
+                        <td class="centered">0x1</td>
+                        <td><span>div</span></td>
+                        <td><span>
+                            Performs integer division by iterative substraction, the divident is stored on the register 0x0, the divisor on the register 0x1. 
+                            <br>
+                            When control is returned to the user code the quotient is stored on the register 0x2 and the modulo on the register 0x0.
+                        </span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </p>
+        <h3 id="3">3. Assembler</h3>
+        <p>
+            To help test the CPU, an assembler was built to convert ZAsm to Intel Hex.
+        </p>
+        <h4 id="3_1">3.1. Assembler syntax</h4>
+        <p>
+            A ZAsm file is composed of instructions, tag definitions and comments.
+            <br>
+            All comments, tag definitions and instructions must end on ";"
+            <br>
+            Comments start with "#" and are ignored by the assembler.
+            <br>
+            Tag definitions start with "." and register a memory position that can be referenced by operands.
+            <br>
+            An instruction has the following format:
+            <br>
+            <br>
+            <b>PREFIX.ASM_NAME:[FIRST_OPERAND,SECOND_OPERAND];</b>
+            <br>
+            <br>
+            Adding the prefix "sync." to the load and store instructions adds two nop:[]; instructions after the operation to wait for the read or write to take place.
+            <br>
+            <br>
+            The operands can be a number, which depending on the instruction can be an immediate or register number or a string which can be a tag name or macro.
+            <br>
+            Operand macros start with "@" and are the following:
+            <br>
+            <ul>
+                <li>@cmp: 0x8, the compare register</li>
+                <li>@ret: 0x9, the return value register</li>
+                <li>@skipAddr: current_address+2, useful to setup the return value to the next instruction after a jump</li>
+            </ul>
+        </p>
+        <h4 id="3_2">3.2. Assembler Live Demo</h4>
+        <textarea rows="30" cols="80" placeholder="ZAsm input" id="asmInput"></textarea>
+        <textarea  rows="30" cols="80" readonly placeholder="IHex output" id="asmOutput"></textarea>
+        <br>
+        <footer>
+            <small>Tiny notes:</small>
+            <br>
+            <small>1. Yes, the minimal css for the page is a choice :)</small>
+            <br>
+            <small>2. If you have any suggestions please contact me on <a href="https://www.linkedin.com/in/daniel-bened%C3%AD-ramiro-970941183/">Linkedin</a></small>
+            <br>
+            <small><a href="#title">Go back up</a></small>
+        </footer>
+    </body>
+    <script>
+        const asmInput = document.getElementById('asmInput');
+        const asmOutput = document.getElementById('asmOutput');
+        asmInput.addEventListener("keyup", assemble);
+        function assemble(){
+            const globals = {
+                macroInstr: new Map([
+                    ['hlt', (()=>[
+                        'mswti:[0]'
+                    ])],
+                    ['div', (ops => [
+                        `seti:[${ops[0]},0]`,
+                        `seti:[${ops[1]},1]`,
+                        `seti:["@skipaddr","@ret"]`,
+                        `mswti:[1]`
+                    ])],
+                    ['sync.load',(ops=>[`load:[${ops[0]},${ops[1]}]`,'nop:[]','nop:[]'])],
+                    ['sync.loadi',(ops=>[`loadi:[${ops[0]},${ops[1]}]`,'nop:[]','nop:[]'])],
+                    ['sync.store',(ops=>[`store:[${ops[0]},${ops[1]}]`,'nop:[]','nop:[]'])],
+                    ['sync.storei',(ops=>[`storei:[${ops[0]},${ops[1]}]`,'nop:[]','nop:[]'])]
+                ]),
+                instructionList: {
+                    'nop':    '00000000',
+                    'seti':   '00000001',
+                    'set':    '00010001',
+                    'addi':   '00000010',
+                    'add':    '00010010',
+                    'muli':   '00000011',
+                    'mul':    '00010011',
+                    'subi':   '00000100',
+                    'sub':    '00010100',
+                    'sli':    '00000101',
+                    'sl':     '00010101',
+                    'sri':    '00000110',
+                    'sr':     '00010110',
+                    'andi':   '00000111',
+                    'and':    '00010111',
+                    'ori':    '00001000',
+                    'or':     '00011000',
+                    'not':    '00011001',
+                    'mswti':  '00001010',
+                    'mswt':   '00011010',
+                    'jmpi':   '00001100',
+                    'jmp':    '00011100',
+                    'zjmpi':  '00001101',
+                    'zjmp':   '00011101',
+                    'ljmpi':  '00001110',
+                    'ljmp':   '00011110',
+                    'gjmpi':  '00001111',
+                    'gjmp':   '00011111',
+                    'loadi':  '00100000',
+                    'load':   '00110000',
+                    'storei': '00100001',
+                    'store':  '00110001',
+                },
+                eolCharacter: ';',
+                commentCharacter: '#',
+                tagCharacter: '.',
+                macroCharacter: '@',
+                wordSize: 32,
+                opcodeSize: 8,
+                operandSize: 12
+            }
+
+            let filecontents = asmInput.value;
+
+            console.log('Cleaning input...');
+            filecontents = filecontents.replaceAll('\n', '')
+                .replaceAll('\r', '')
+                .replaceAll('\t', '')
+                .replaceAll(' ', '');
+
+            console.log('Generating instruction array...');
+            const instrArray = filecontents.split(globals.eolCharacter);
+            let binaryStringArray = [];
+            const tags = new Map();
+            console.log('Generating binary strings...')
+            try {
+                let macroExpandedArray = [];
+                let strippedInstrArray = [];
+                // Remove EOF
+                instrArray.pop();
+                // Expand macro instructions into instructions
+                instrArray.forEach((instr,index) => {
+                    let expandedInstr;
+                    if(instr.startsWith(globals.commentCharacter) || instr.startsWith(globals.tagCharacter) || !globals.macroInstr.has(instr.split(':')[0])){
+                        expandedInstr = [instr];
+                    }else{
+                        console.log(`Macro instruction found on index ${index}, parsing...`);
+                        expandedInstr = globals.macroInstr.get(instr.split(':')[0])(JSON.parse(instr.split(':')[1]));
+                    }
+                    macroExpandedArray.push(...expandedInstr);
+                });
+                // Identify tags and log them into the map
+                macroExpandedArray.forEach(instr => {
+                    if(instr.startsWith(globals.commentCharacter)){
+                        return;
+                    }
+                    if (instr.startsWith(globals.tagCharacter)) {
+                        const tag = instr.split(globals.tagCharacter)[1];
+                        console.log(`Tag detected: ${tag}`);
+                        tags.set(tag, strippedInstrArray.length);
+                        console.log(`Tag ${tag} registered at address ${strippedInstrArray.length}`);
+                        return;
+                    }
+                    strippedInstrArray.push(instr);
+                });
+                // Clear previous array to save a little bit of memory
+                macroExpandedArray = null;
+                console.log('Number of instructions: ' + strippedInstrArray.length);
+                // Instruction assembler
+                strippedInstrArray.forEach((instr, index) => {
+                    console.log(`${(index + 1)} of ${strippedInstrArray.length}`);
+                    const opcode = instr.split(':')[0];
+                    const operands = JSON.parse(instr.split(':')[1]);
+                    const binaryOpcode = globals.instructionList[opcode.toLowerCase()];
+
+                    /* 
+                        The second operand can be omitted if it is zero, for example on a jmp instr.
+                        This code makes sure to autopopulate the missing field to zero
+                    */
+                    while (operands.length < 2) {
+                        operands.push(0);
+                    }
+
+                    const binaryOperands = operands.map(op => {
+                        if (typeof (op) === 'string') {
+                            if(op.startsWith(globals.macroCharacter)){
+                                switch(op.split(globals.macroCharacter)[1].toLowerCase()){
+                                    case 'cmp':
+                                        return (8).toString(2).padStart(globals.operandSize, '0');
+                                    case 'ret':
+                                        return (9).toString(2).padStart(globals.operandSize, '0');
+                                    case 'maxvalue':
+                                        return ((Math.pow(2,globals.operandSize)-1)).toString(2).padStart(globals.operandSize, '0');
+                                    case 'skipaddr':
+                                        return ((index+2)).toString(2).padStart(globals.operandSize, '0');
+                                    default:
+                                        throw new error(`Macro not found ${op.split(globals.macroCharacter)[1]}`);
+                                }
+                            }
+                            if (!tags.has(op))
+                                throw new error(`tag ${op} is not registered.`);
+                            const tagAddr = (tags.get(op)).toString(2).padStart(globals.operandSize, '0');
+                            console.log(`tag ${op} detected set to address ${tagAddr}.`)
+                            return tagAddr;
+                        } else
+                            return (op).toString(2).padStart(globals.operandSize, '0');
+                    }).reverse().join('');
+
+                    let binaryInstr = new Uint8Array((globals.wordSize/8));
+
+                    for(let i = 0; i < binaryInstr.length;i++){
+                        if ((i*8) < globals.opcodeSize){
+                            // Needs to changes this code, at the moment it limits the opcode length to 1 byte
+                            binaryInstr[i] = parseInt(binaryOpcode, 2);
+                        }else{
+                            binaryInstr[i] = parseInt(binaryOperands.substring(
+                                (binaryInstr.length*8)-((i+1)*8),
+                                (binaryInstr.length*8)-(i*8)
+                            ),2);
+                        }
+                    }
+
+                    binaryStringArray.push(binaryInstr);
+                });
+            } catch (err) {
+                console.log('Error trying to parse the instructions, please check the input and logs for syntax errors');
+                console.error(err);
+                return;
+            }
+
+            console.log('Writing Output...');
+
+            asmOutput.value = '';
+            // Header of the intel hex file
+            asmOutput.value += 'v2.0 raw\r\n';
+            for (let i = 0; i < binaryStringArray.length; i++) {
+                // Reverse is neccessary to correct endianess
+                asmOutput.value += (bin2hex(binaryStringArray[i].reverse()) + '\r\n');
+            }
+            console.log('Output written');
+
+            function bin2hex(binaryStringArray) { // buffer is an ArrayBuffer
+                return [...binaryStringArray]
+                    .map(x => x.toString(16).padStart(2, '0')) // The padStart 2 is used here because a byte is 2 hex characters length minimum.
+                    .join('');
+            }
+        }
+    </script>
+</html>
