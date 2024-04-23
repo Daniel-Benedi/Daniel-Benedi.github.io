@@ -23,10 +23,38 @@
                         `seti:["@skipaddr","@ret"]`,
                         `mswti:[1]`
                     ])],
-                    ['sync.load',(ops=>[`load:[${ops[0]},${ops[1]}]`,'nop:[]','nop:[]'])],
-                    ['sync.loadi',(ops=>[`loadi:[${ops[0]},${ops[1]}]`,'nop:[]','nop:[]'])],
-                    ['sync.store',(ops=>[`store:[${ops[0]},${ops[1]}]`,'nop:[]','nop:[]'])],
-                    ['sync.storei',(ops=>[`storei:[${ops[0]},${ops[1]}]`,'nop:[]','nop:[]'])]
+                    ['sync.load',(ops=> {
+                            let nopArray = [];
+                            for(let i = 0; i < globals.memoryLatencyPadding;i++){
+                                nopArray.push('nop:[]')
+                            } 
+                            return [`load:[${ops[0]},${ops[1]}]`].concat(nopArray);
+                        })
+                    ],
+                    ['sync.loadi',(ops=> {
+                            let nopArray = [];
+                            for(let i = 0; i < globals.memoryLatencyPadding;i++){
+                                nopArray.push('nop:[]')
+                            } 
+                            return [`loadi:[${ops[0]},${ops[1]}]`].concat(nopArray);
+                        })
+                    ],
+                    ['sync.store',(ops=> {
+                            let nopArray = [];
+                            for(let i = 0; i < globals.memoryLatencyPadding;i++){
+                                nopArray.push('nop:[]')
+                            } 
+                            return [`store:[${ops[0]},${ops[1]}]`].concat(nopArray);
+                        })
+                    ],
+                    ['sync.storei',(ops=> {
+                            let nopArray = [];
+                            for(let i = 0; i < globals.memoryLatencyPadding;i++){
+                                nopArray.push('nop:[]')
+                            } 
+                            return [`storei:[${ops[0]},${ops[1]}]`].concat(nopArray);
+                        })
+                    ]
                 ]),
                 instructionList: {
                     'nop':    '00000000',
@@ -68,7 +96,8 @@
                 macroCharacter: '@',
                 wordSize: 32,
                 opcodeSize: 8,
-                operandSize: 12
+                operandSize: 12,
+                memoryLatencyPadding: 2
             }
 
             let filecontents = asmInput.value;
