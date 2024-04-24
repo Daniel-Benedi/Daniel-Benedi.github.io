@@ -24,7 +24,7 @@
         <h1 id="title">ZA 12</h1>
         <h3 id="1">1. Basic Description</h3>
         <p>
-            ZA 12 is a 12 bit toy ISA and verilog CPU soft core I designed for fun.
+            ZA 12 is a 12 bit toy ISA and verilog SOC soft core I designed for fun.
             <br>
             It has 8 general, 1 compare (0x8) and 1 return value (0x9) 12 bit registers and a program counter.
             <br>
@@ -568,6 +568,15 @@
         <p>
             The assembler can be tested <a href="./ZA12_asm.html">here</a>
         </p>
+        <h3 id="4">4. Physical Design</h3>
+        <p>
+            The ZA 12 ISA has a reference SOC written in Verilog named ZA P1/12, which is currently under heavy development and will be available to the general public on a later date.
+            <br>
+            As of 2024-04-24, the schematic for the SOC looks like this:
+            <br>
+        </p>
+        <img src="./schematics/ZAP112.scm.svg"></img>
+        <br>
         <br>
         <footer>
             <small>Tiny notes:</small>
