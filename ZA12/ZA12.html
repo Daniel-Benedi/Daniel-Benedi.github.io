@@ -26,11 +26,11 @@
         <p>
             ZA 12 is a 12 bit toy ISA and verilog SOC soft core I designed for fun.
             <br>
-            It has 8 general, 1 compare (0x8) and 1 return value (0x9) 12 bit registers and a program counter.
+            It has 8 general, 1 compare (0x8), 1 return value (0x9) and 1 stack pointer (0xC) 12 bit registers and a program counter.
             <br>
-            It contains two ROM chips on package, one for user code and one for virtual instructions and a RAM chip.
+            It contains a ROM chip for startup and a RAM chip.
             <br>
-            All of them contain 4096 32 bit big-endian addresses.
+            Both of them contain 4096 32 bit big-endian addresses.
             <br>
             At this point, the roadmap includes implementing I/O, byte size operations, interrupts, a FPU and full duplex UART.
             <br>
@@ -326,28 +326,6 @@
                 </tr>
                 <tr>
                     <td class="centered">
-                        0x0A
-                    </td>
-                    <td>
-                        mswti
-                    </td>
-                    <td>
-                        <span>Please, refer to the <a href="#2_3">virtual instructions</a> section</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="centered">
-                        0x1A
-                    </td>
-                    <td>
-                        mswt
-                    </td>
-                    <td>
-                        <span>Please, refer to the <a href="#2_3">virtual instructions</a> section</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="centered">
                         0x0C
                     </td>
                     <td>
@@ -488,48 +466,6 @@
                 </tr>
             </tbody>
         </table>
-        <h4 id="2_3">2.3. Virtual Instructions</h4>
-        <p>
-            The ZA 12 package contains a ROM chip with software implemented functions.
-            <br>
-            To call them the developers must populate the input registers indicated on the particular function definition and the return value register.
-            <br>
-            Once that is done, the virtual instruction can be invoked using either the mswt or mswti instruction, 
-            <br>
-            the difference being if you jump to the immediate or register value function indicated on the first operand.
-            <br>
-            Once the virtual function has ended, execution returns to the address indicated on the return value register.
-            <h5 id="2_3_1">2.3.1. Virtual Instructions Table:</h5>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Index</th>
-                        <th>Asm name</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="centered">0x0</td>
-                        <td><span>hlt</span></td>
-                        <td><span>
-                            This instruction is only enabled on debug prototypes and it is used to stop execution.
-                            <br>
-                            Execution never returns to user code after calling it.
-                        </span></td>
-                    </tr>
-                    <tr>
-                        <td class="centered">0x1</td>
-                        <td><span>div</span></td>
-                        <td><span>
-                            Performs integer division by iterative substraction, the divident is stored on the register 0x0, the divisor on the register 0x1. 
-                            <br>
-                            When control is returned to the user code the quotient is stored on the register 0x2 and the modulo on the register 0x0.
-                        </span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </p>
         <h3 id="3">3. Assembler</h3>
         <p>
             To help test the CPU, an assembler was built to convert ZAsm to Intel Hex.
@@ -560,6 +496,7 @@
             <ul>
                 <li>@cmp: 0x8, the compare register</li>
                 <li>@ret: 0x9, the return value register</li>
+                <li>@sp: 0xC, the stack pointer register</li>
                 <li>@skipAddr: current_address+2, useful to setup the return value to the next instruction after a jump</li>
             </ul>
         </p>

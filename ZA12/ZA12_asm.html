@@ -169,6 +169,8 @@
                                         return (8).toString(2).padStart(globals.operandSize, '0');
                                     case 'ret':
                                         return (9).toString(2).padStart(globals.operandSize, '0');
+                                    case 'sp':
+                                        return (12).toString(2).padStart(globals.operandSize, '0');
                                     case 'maxvalue':
                                         return ((Math.pow(2,globals.operandSize)-1)).toString(2).padStart(globals.operandSize, '0');
                                     case 'skipaddr':
