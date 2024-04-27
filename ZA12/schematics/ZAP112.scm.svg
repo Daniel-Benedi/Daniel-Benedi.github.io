@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Digital by H.Neemann -->
-<!-- created: Sat Apr 27 17:18:46 CEST 2024 -->
+<!-- created: Sat Apr 27 18:59:52 CEST 2024 -->
 
 <svg
    xmlns:svg="http://www.w3.org/2000/svg"
@@ -37,7 +37,7 @@
 <path d="M 1260,20 L 1280,20" stroke="#000000" stroke-width="4.0" fill="none"/>
 <path d="M 1580,340 L 1700,340 L 1700,660 L 1760,660" stroke="#000000" stroke-width="4.0" fill="none"/>
 <path d="M 1920,280 L 1940,280" stroke="#000000" stroke-width="4.0" fill="none"/>
-<path d="M 2020,300 L 2020,280 L 2040,280" stroke="#000000" stroke-width="4.0" fill="none"/>
+<path d="M 2000,300 L 2000,280 L 2040,280" stroke="#000000" stroke-width="4.0" fill="none"/>
 <path d="M 2280,220 L 2300,220" stroke="#000000" stroke-width="4.0" fill="none"/>
 <path d="M 2020,220 L 2040,220" stroke="#000000" stroke-width="4.0" fill="none"/>
 <path d="M 1280,220 L 1300,220" stroke="#000000" stroke-width="4.0" fill="none"/>
@@ -297,32 +297,36 @@
 <circle cx="2140.0" cy="20.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 </g>
 <g>
-<path d="M 2041,186 L 2279,186 L 2279,314 L 2041,314 Z" stroke="#ffffb4" stroke-width="0.0" fill="#ffffb4" fill-opacity="0.7843137254901961"/>
-<path d="M 2041,186 L 2279,186 L 2279,314 L 2041,314 Z" stroke="#000000" stroke-width="4.0" fill="none"/>
+<path d="M 2041,186 L 2279,186 L 2279,334 L 2041,334 Z" stroke="#ffffb4" stroke-width="0.0" fill="#ffffb4" fill-opacity="0.7843137254901961"/>
+<path d="M 2041,186 L 2279,186 L 2279,334 L 2041,334 Z" stroke="#000000" stroke-width="4.0" fill="none"/>
 <text text-anchor="start" x="2044.0" y="206.75" fill="#000000" style="font-size:18px">wRegData</text>
 <text text-anchor="start" x="2044.0" y="226.75" fill="#000000" style="font-size:18px">wRegAddr</text>
 <text text-anchor="start" x="2044.0" y="246.75" fill="#000000" style="font-size:18px">rRegAddr</text>
 <path d="M 2041,267 L 2048,260 L 2041,253" stroke="#000000" stroke-width="2.0" fill="none"/>
 <text text-anchor="start" x="2051.0" y="266.75" fill="#000000" style="font-size:18px">clk</text>
 <text text-anchor="start" x="2044.0" y="286.75" fill="#000000" style="font-size:18px">UARTReady</text>
+<text text-anchor="start" x="2044.0" y="306.75" fill="#000000" style="font-size:18px">intSignal</text>
 <text text-anchor="end" x="2276.0" y="206.75" fill="#000000" style="font-size:18px">rRegData</text>
 <text text-anchor="end" x="2276.0" y="226.75" fill="#000000" style="font-size:18px">wDataOut</text>
 <text text-anchor="end" x="2276.0" y="246.75" fill="#000000" style="font-size:18px">cmp</text>
 <text text-anchor="end" x="2276.0" y="266.75" fill="#000000" style="font-size:18px">ret</text>
 <text text-anchor="end" x="2276.0" y="286.75" fill="#000000" style="font-size:18px">wUARTReg</text>
 <text text-anchor="end" x="2276.0" y="306.75" fill="#000000" style="font-size:18px">SSF</text>
-<text text-anchor="middle" x="2160.0" y="331.5" fill="#000000" style="font-size:18px">registerFile</text>
+<text text-anchor="end" x="2276.0" y="326.75" fill="#000000" style="font-size:18px">intFlag</text>
+<text text-anchor="middle" x="2160.0" y="351.5" fill="#000000" style="font-size:18px">registerFile</text>
 <circle cx="2040.0" cy="200.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="2040.0" cy="220.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="2040.0" cy="240.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="2040.0" cy="260.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="2040.0" cy="280.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
+<circle cx="2040.0" cy="300.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="2280.0" cy="200.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="2280.0" cy="220.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="2280.0" cy="240.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="2280.0" cy="260.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="2280.0" cy="280.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="2280.0" cy="300.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
+<circle cx="2280.0" cy="320.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 </g>
 <g>
 <circle cx="1956.0" cy="620.0" r="9.0" stroke="#000000" stroke-width="4.0" fill="none" />
@@ -372,9 +376,9 @@
 <circle cx="1920.0" cy="600.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 </g>
 <g>
-<path d="M 2020,300 L 2012,314 L 2028,314 Z" stroke="#000000" stroke-width="4.0" fill="none"/>
-<text text-anchor="end" x="2020.0" y="325.75" fill="#000000" style="font-size:18px" transform="rotate(-90,2020.0,319.0)" >uartReadyT</text>
-<circle cx="2020.0" cy="300.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
+<path d="M 2000,300 L 1992,314 L 2008,314 Z" stroke="#000000" stroke-width="4.0" fill="none"/>
+<text text-anchor="end" x="2000.0" y="325.75" fill="#000000" style="font-size:18px" transform="rotate(-90,2000.0,319.0)" >uartReadyT</text>
+<circle cx="2000.0" cy="300.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 </g>
 <g>
 <path d="M 2280,280 L 2294,288 L 2294,272 Z" stroke="#000000" stroke-width="4.0" fill="none"/>
@@ -537,8 +541,8 @@
 <circle cx="1300.0" cy="420.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 </g>
 <g>
-<path d="M 81,486 L 299,486 L 299,634 L 81,634 Z" stroke="#ffffb4" stroke-width="0.0" fill="#ffffb4" fill-opacity="0.7843137254901961"/>
-<path d="M 81,486 L 299,486 L 299,634 L 81,634 Z" stroke="#000000" stroke-width="4.0" fill="none"/>
+<path d="M 81,486 L 299,486 L 299,654 L 81,654 Z" stroke="#ffffb4" stroke-width="0.0" fill="#ffffb4" fill-opacity="0.7843137254901961"/>
+<path d="M 81,486 L 299,486 L 299,654 L 81,654 Z" stroke="#000000" stroke-width="4.0" fill="none"/>
 <text text-anchor="start" x="84.0" y="506.75" fill="#000000" style="font-size:18px">interrupt</text>
 <text text-anchor="start" x="84.0" y="526.75" fill="#000000" style="font-size:18px">int<tspan style="font-size:80%;baseline-shift:sub;">write</tspan></text>
 <text text-anchor="start" x="84.0" y="546.75" fill="#000000" style="font-size:18px">int<tspan style="font-size:80%;baseline-shift:sub;">addr</tspan></text>
@@ -547,9 +551,10 @@
 <text text-anchor="start" x="84.0" y="606.75" fill="#000000" style="font-size:18px">jmpAddr</text>
 <path d="M 81,627 L 88,620 L 81,613" stroke="#000000" stroke-width="2.0" fill="none"/>
 <text text-anchor="start" x="91.0" y="626.75" fill="#000000" style="font-size:18px">clk</text>
+<text text-anchor="start" x="84.0" y="646.75" fill="#000000" style="font-size:18px">intFlag</text>
 <text text-anchor="end" x="296.0" y="506.75" fill="#000000" style="font-size:18px">interrupt<tspan style="font-size:80%;baseline-shift:sub;">jmp</tspan></text>
 <text text-anchor="end" x="296.0" y="526.75" fill="#000000" style="font-size:18px">interrupt<tspan style="font-size:80%;baseline-shift:sub;">signal</tspan></text>
-<text text-anchor="middle" x="190.0" y="651.5" fill="#000000" style="font-size:18px">interruptHandler</text>
+<text text-anchor="middle" x="190.0" y="671.5" fill="#000000" style="font-size:18px">interruptHandler</text>
 <circle cx="80.0" cy="500.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="80.0" cy="520.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="80.0" cy="540.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
@@ -557,6 +562,7 @@
 <circle cx="80.0" cy="580.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="80.0" cy="600.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="80.0" cy="620.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
+<circle cx="80.0" cy="640.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="300.0" cy="500.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 <circle cx="300.0" cy="520.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 </g>
@@ -620,6 +626,21 @@
 <path d="M 80,620 L 66,612 L 66,628 Z" stroke="#000000" stroke-width="4.0" fill="none"/>
 <text text-anchor="end" x="61.0" y="626.75" fill="#000000" style="font-size:18px">clk</text>
 <circle cx="80.0" cy="620.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
+</g>
+<g>
+<path d="M 2280,320 L 2294,328 L 2294,312 Z" stroke="#000000" stroke-width="4.0" fill="none"/>
+<text text-anchor="start" x="2299.0" y="326.75" fill="#000000" style="font-size:18px">intFlagT</text>
+<circle cx="2280.0" cy="320.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
+</g>
+<g>
+<path d="M 2040,300 L 2026,292 L 2026,308 Z" stroke="#000000" stroke-width="4.0" fill="none"/>
+<text text-anchor="end" x="2021.0" y="306.75" fill="#000000" style="font-size:18px">intSignalT</text>
+<circle cx="2040.0" cy="300.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
+</g>
+<g>
+<path d="M 80,640 L 66,632 L 66,648 Z" stroke="#000000" stroke-width="4.0" fill="none"/>
+<text text-anchor="end" x="61.0" y="646.75" fill="#000000" style="font-size:18px">intFlagT</text>
+<circle cx="80.0" cy="640.0" r="2.0" stroke="#000000" stroke-width="4.0" fill="#000000" />
 </g>
 </g>
 </svg>
