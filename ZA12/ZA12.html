@@ -26,15 +26,19 @@
         <p>
             ZA 12 is a 12 bit toy ISA and verilog SOC soft core I designed for fun.
             <br>
-            It has 8 general, 1 compare (0x8), 1 return value (0x9) and 1 stack pointer (0xC) 12 bit registers and a program counter.
+            It has the following 12 bit registers:
             <br>
-            It contains a ROM chip for startup and a RAM chip.
+            8 general, 1 compare (0x8), 1 return value (0x9), 1 stack pointer (0xC), 1 interrupt PC backup (0xD) and a program counter.
+            <br>
+            It contains a ROM chip for startup and a RAM chip for user code.
             <br>
             Both of them contain 4096 32 bit big-endian addresses.
             <br>
-            At this point, the roadmap includes implementing I/O, byte size operations, interrupts, a FPU and full duplex UART.
+            At this point, the roadmap includes implementing I/O, byte size operations, a FPU and full duplex UART.
             <br>
-            The development and testing is getting performed on a sipeed Tang Primer 20k FPGA board using Godwin's toolchain.
+            Bitwise and integer math operations, load/store, jump and branches and interrupts are already implemented.
+            <br>
+            The development and testing is getting performed on a sipeed Tang Primer 20k FPGA board using Gowin's toolchain.
             <br>
             This is an active document and it will get updated as new features get implemented.
         </p>
@@ -326,6 +330,28 @@
                 </tr>
                 <tr>
                     <td class="centered">
+                        0x0B
+                    </td>
+                    <td>
+                        intsi
+                    </td>
+                    <td>
+                        <span>Stores the immediate value of the first operand into the interrupt table index specified in the second operand</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
+                        0x1B
+                    </td>
+                    <td>
+                        ints
+                    </td>
+                    <td>
+                        <span>Stores the register value of the first operand into the interrupt table index specified in the second operand</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="centered">
                         0x0C
                     </td>
                     <td>
@@ -509,7 +535,7 @@
         <p>
             The ZA 12 ISA has a reference SOC written in Verilog named ZA P1/12, which is currently under heavy development and will be available to the general public on a later date.
             <br>
-            As of 2024-04-24, the schematic for the SOC looks like this:
+            As of 2024-04-27, the schematic for the SOC looks like this:
             <br>
         </p>
         <img src="./schematics/ZAP112.scm.svg"></img>
