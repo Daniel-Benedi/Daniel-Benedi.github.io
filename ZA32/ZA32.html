@@ -21,22 +21,20 @@
         </style>
     </head>
     <body>
-        <h1 id="title">ZA 12</h1>
+        <h1 id="title">ZA 32</h1>
         <h3 id="1">1. Basic Description</h3>
         <p>
-            ZA 12 is a 12 bit toy ISA and verilog SOC soft core I designed for fun.
+            ZA 32 is a 32 bit toy ISA and verilog SOC soft core I designed for fun.
             <br>
-            It has the following 12 bit registers:
+            It has the following 32 bit registers:
             <br>
             8 general, 1 compare (0x8), 1 return value (0x9), 1 stack pointer (0xC), 1 interrupt PC backup (0xD), 1 interrupt enabled (0xE) and a program counter.
             <br>
-            It contains a ROM chip for startup and a RAM chip for user code.
-            <br>
-            Both of them contain 4096 32 bit big-endian addresses.
+            It contains a boot ROM chip to initialize the system; and a ROM chip and a RAM chip for user code.
             <br>
             At this point, the roadmap includes implementing I/O, byte size operations, a FPU and full duplex UART.
             <br>
-            Bitwise and integer math operations, load/store, jump and branches and interrupts are already implemented.
+            Bitwise and integer math operations, load/store, jump and branches and hardware/software interrupts are already implemented.
             <br>
             The development and testing is getting performed on a sipeed Tang Primer 20k FPGA board using Gowin's toolchain.
             <br>
@@ -93,7 +91,7 @@
                         <span>First operand</span>
                     </td>
                     <td class="centered">
-                        12
+                        32
                     </td>
                     <td><span>
                         It can be a register or an immediate value
@@ -104,7 +102,7 @@
                         <span>Second operand</span>
                     </td>
                     <td class="centered">
-                        12
+                        32
                     </td>
                     <td><span>
                         It is always a register, except for the store/storei instructions where it is a RAM address
@@ -447,8 +445,6 @@
                     </td>
                     <td><span>
                         Reads the immediate RAM address stored on the first operand, stores the value into the second operand register.
-                        <br>
-                        NOTE: RAM operations have a 3 cycle latency, you can use a nop instruction as padding if necessary.
                     </span></td>
                 </tr>
                 <tr>
@@ -460,8 +456,6 @@
                     </td>
                     <td><span>
                         Reads the register RAM address stored on the first operand, stores the value into the second operand register.
-                        <br>
-                        NOTE: RAM operations have a 3 cycle latency, you can use a nop instruction as padding if necessary.
                     </span></td>
                 </tr>
                 <tr>
@@ -473,8 +467,6 @@
                     </td>
                     <td><span>
                         Writes to the immediate RAM address stored on the second operand, stores the immediate value of the first operand.
-                        <br>
-                        NOTE: RAM operations have a 3 cycle latency, you can use a nop instruction as padding if necessary.
                     </span></td>
                 </tr>
                 <tr>
@@ -486,8 +478,6 @@
                     </td>
                     <td><span>
                         Writes to the immediate RAM address stored on the second operand, stores the register value of the first operand.
-                        <br>
-                        NOTE: RAM operations have a 3 cycle latency, you can use a nop instruction as padding if necessary.
                     </span></td>
                 </tr>
             </tbody>
@@ -512,9 +502,6 @@
             <b>PREFIX.ASM_NAME:[FIRST_OPERAND,SECOND_OPERAND];</b>
             <br>
             <br>
-            Adding the prefix "sync." to the load and store instructions adds two nop:[]; instructions after the operation to wait for the read or write to take place.
-            <br>
-            <br>
             The operands can be a number, which depending on the instruction can be an immediate or register number or a string which can be a tag name or macro.
             <br>
             Operand macros start with "@" and are the following:
@@ -529,16 +516,16 @@
         <h4 id="3_2">3.2. Assembler Live Demo</h4>
         <br>
         <p>
-            The assembler can be tested <a href="./ZA12_asm.html">here</a>
+            The assembler can be tested <a href="./ZA32_asm.html">here</a>
         </p>
         <h3 id="4">4. Physical Design</h3>
         <p>
-            The ZA 12 ISA has a reference SOC written in Verilog named ZA P1/12, which is currently under heavy development and will be available to the general public on a later date.
+            The ZA 32 ISA has a reference SOC written in Verilog named ZA P1/32, which is currently under heavy development and will be available to the general public on a later date.
             <br>
-            As of 2024-04-27, the schematic for the SOC looks like this:
+            As of 2024-04-30, the schematic for the SOC looks like this:
             <br>
         </p>
-        <img src="./schematics/ZAP112.scm.svg"></img>
+        <img src="./schematics/ZAP132.scm.svg"></img>
         <br>
         <br>
         <footer>
